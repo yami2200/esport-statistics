@@ -1,0 +1,12 @@
+{
+  "lol" : {
+    "name" : "League of Legends",
+    "players" : [],
+    "tournaments" : []
+  },
+  "rl" : {
+    "name" : "Rocket League",
+    "players" : [],
+    "tournaments" : []
+  }
+}
