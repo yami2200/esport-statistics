@@ -19,8 +19,17 @@ def format_date(date_str):
     return formatted_date
 
 
+def transform_date(date_str):
+    year, month, day = date_str.split('-')
+    return f"{day}/{month}/{year}"
+
+
 def string_price_to_number(s):
     return int(s.replace(',', '').replace('$', ''))
+
+
+def string_price_pool_to_number(s):
+    return int(s.replace(',', '').replace('$', '').split('\xa0')[0])
 
 
 def is_tournament_list(obj):
@@ -41,7 +50,54 @@ def load_json_file(filename):
 
 
 def get_tournament_data(json_data):
+    tournament = load_json_file("tournament.json")
+
     html = json_data['parse']['text']['*']
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # Get tournament name
+    tournament_name = soup.find('div', attrs={'class' : "infobox-header wiki-backgroundcolor-light"})
+    tournament['name'] = tournament_name.text.replace(tournament_name.span.text, '').strip()
+
+    # Get tournament date
+    startdate = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Start Date:')
+    startdate_text = startdate.find_next_sibling('div').text
+    tournament['start-date'] = transform_date(startdate_text)
+    enddate = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='End Date:')
+    enddate_text = enddate.find_next_sibling('div').text
+    tournament['end-date'] = transform_date(enddate_text)
+
+    # Get tournament Location
+    location = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Location:')
+    tournament['location'] = location.find_next('a')['title']
+
+    # Get Team Winner
+    team_winner = soup.find('span', attrs={'title' : "First"})
+    tournament['team-winner'] = team_winner.find_next('div', attrs={'class': 'block-team'}).find_next('a')['title']
+
+    # Get Prize Pool
+    prizepool = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Prize Pool:')
+    prizepool_text = prizepool.find_next_sibling('div').text
+    tournament['prize-pool'] = string_price_pool_to_number(prizepool_text)
+
+    # Get Players
+    with_tag_lol = soup.find('span', id='Country_Representation')
+    siblings = with_tag_lol.find_all_next('div', class_='table-responsive')
+    siblings_soup = siblings[0]
+    players_markup = siblings_soup.find_all('a')
+    for p in players_markup:
+        if p.text != "":
+            tournament['players'].append(p.text)
+
+    # Get Teams
+    teams_html = soup.find_all('div', class_='block-team')
+    tournament['teams'] = set()
+    for team in teams_html:
+        teams_a = team.find('a')
+        if teams_a is not None:
+            tournament['teams'].add(teams_a.get('title'))
+
+    return tournament
 
 
 def get_player_data(json_data):
@@ -87,10 +143,10 @@ def players_already_exist(playername):
     return len(filter(lambda p: p["name"] == playername, players_data)) > 0
 
 
-response = requests.get(f'https://liquipedia.net/leagueoflegends/api.php?action=parse&page=Faker&format=json', headers=headers)
+response = requests.get(f'https://liquipedia.net/leagueoflegends/api.php?action=parse&page=World Championship/2020&format=json', headers=headers)
 data = response.json()
 
-get_player_data(data)
+get_tournament_data(data)
 
 sys.exit(0)
 
