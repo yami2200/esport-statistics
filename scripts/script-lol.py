@@ -143,14 +143,6 @@ def players_already_exist(playername):
     return len(filter(lambda p: p["name"] == playername, players_data)) > 0
 
 
-response = requests.get(f'https://liquipedia.net/leagueoflegends/api.php?action=parse&page=World Championship/2020&format=json', headers=headers)
-data = response.json()
-
-get_tournament_data(data)
-
-sys.exit(0)
-
-
 # Get all tournaments
 for tier in tier_accepted:
     # Get tournaments list from the tier
