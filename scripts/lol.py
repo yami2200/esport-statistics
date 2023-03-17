@@ -86,7 +86,7 @@ def get_tournament_data(json_data):
                     if player_name_and_flag != [] and player_name_and_flag[0].find('img'):  # eliminate Promotion and competition name
                         if player_name_and_flag[1] is not None:
                             player_name = player_name_and_flag[1]['href'].split('/')[2]
-                            tournament['players'].add(player_name)
+                            tournament['players'].append(player_name)
 
         # Get Teams
         teams_html = soup.find_all('div', class_='block-team')
