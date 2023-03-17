@@ -93,7 +93,6 @@ def get_tournament_data(json_data):
                 player_name_and_flag = player.findAll('a')
                 if player_name_and_flag != [] and player_name_and_flag[0].find('img'):  # eliminate Promotion and competition name
                     if player_name_and_flag[1] is not None:
-                        print(player_name_and_flag[1].text)
                         player_name = player_name_and_flag[1]['href'].split('/')[2]
                         tournament['players'].add(player_name)
 
