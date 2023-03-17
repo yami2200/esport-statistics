@@ -58,53 +58,57 @@ def get_tournament_data(json_data):
     html = json_data['parse']['text']['*']
     soup = BeautifulSoup(html, 'html.parser')
 
-    try:
-        # Get tournament name
-        tournament_name = soup.find('div', attrs={'class' : "infobox-header wiki-backgroundcolor-light"})
-        tournament['name'] = tournament_name.text.replace(tournament_name.span.text, '').strip()
+    #try:
+    # Get tournament name
+    tournament_name = soup.find('div', attrs={'class' : "infobox-header wiki-backgroundcolor-light"})
+    tournament['name'] = tournament_name.text.replace(tournament_name.span.text, '').strip()
 
-        # Get tournament date
-        startdate = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Start Date:')
-        startdate_text = startdate.find_next_sibling('div').text
-        tournament['start-date'] = transform_date(startdate_text)
-        enddate = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='End Date:')
-        enddate_text = enddate.find_next_sibling('div').text
-        tournament['end-date'] = transform_date(enddate_text)
+    # Get tournament date
+    startdate = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Start Date:')
+    startdate_text = startdate.find_next_sibling('div').text
+    tournament['start-date'] = transform_date(startdate_text)
+    enddate = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='End Date:')
+    enddate_text = enddate.find_next_sibling('div').text
+    tournament['end-date'] = transform_date(enddate_text)
 
-        # Get tournament Location
-        location = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Location:')
-        tournament['location'] = location.find_next('a')['title']
+    # Get tournament Location
+    location = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Location:')
+    tournament['location'] = location.find_next('a')['title']
 
-        # Get Team Winner
-        team_winner = soup.find('span', attrs={'title' : "First"})
-        tournament['team-winner'] = team_winner.find_next('div', attrs={'class': 'block-team'}).find_next('a')['title']
+    # Get Team Winner
+    team_winner = soup.find('span', attrs={'title' : "First"})
+    tournament['team-winner'] = team_winner.find_next('div', attrs={'class': 'block-team'}).find_next('a')['title']
 
-        # Get Prize Pool
-        prizepool = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Prize Pool:')
-        prizepool_text = prizepool.find_next_sibling('div').text
-        tournament['prize-pool'] = string_price_pool_to_number(prizepool_text.split('$')[1])
+    # Get Prize Pool
+    prizepool = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Prize Pool:')
+    prizepool_text = prizepool.find_next_sibling('div').text
+    tournament['prize-pool'] = string_price_pool_to_number(prizepool_text.split('$')[1])
 
-        # Get Players
-        with_tag_lol = soup.find('span', id='Country_Representation')
-        siblings = with_tag_lol.find_all_next('div', class_='table-responsive')
-        siblings_soup = siblings[0]
-        players_markup = siblings_soup.find_all('a')
-        for p in players_markup:
-            if p.text != "":
-                tournament['players'].append(p.text)
+    # Get Players
+    participating_teams = soup.findAll('div', class_='teamcard-inner')
+    for flag in participating_teams:
+        players_list = flag.findAll('tr', {'class': None, 'id': None})
+        for player in players_list:
+            if player.find('abbr', {'title': ['Coach', 'Did not play']}) is None and player.find('img', {'alt': 'Head Coach'}) is None:  # eliminate coachs and players who haven't played
+                player_name_and_flag = player.findAll('a')
+                if player_name_and_flag != [] and player_name_and_flag[0].find('img'):  # eliminate Promotion and competition name
+                    if player_name_and_flag[1] is not None:
+                        print(player_name_and_flag[1].text)
+                        player_name = player_name_and_flag[1]['href'].split('/')[2]
+                        tournament['players'].add(player_name)
 
-        # Get Teams
-        teams_html = soup.find_all('div', class_='block-team')
-        tournament['teams'] = set()
-        for team in teams_html:
-            teams_a = team.find('a')
-            if teams_a is not None:
-                tournament['teams'].add(teams_a.get('title'))
+    # Get Teams
+    teams_html = soup.find_all('div', class_='block-team')
+    tournament['teams'] = set()
+    for team in teams_html:
+        teams_a = team.find('a')
+        if teams_a is not None:
+            tournament['teams'].add(teams_a.get('title'))
 
-        return tournament
-    except:
-        print("Error in tournament: ", tournament['name'])
-        return None
+    return tournament
+    #except:
+    #    print("Error in tournament: ", tournament['name'])
+    #    return None
 
 
 def get_player_data(json_data):
