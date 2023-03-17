@@ -77,13 +77,16 @@ def get_tournament_data(json_data):
         tournament['prize-pool'] = string_price_pool_to_number(prizepool_text.split('$')[1])
 
         # Get Players
-        with_tag_lol = soup.find('span', id='Country_Representation')
-        siblings = with_tag_lol.find_all_next('div', class_='table-responsive')
-        siblings_soup = siblings[0]
-        players_markup = siblings_soup.find_all('a')
-        for p in players_markup:
-            if p.text != "":
-                tournament['players'].append(p.text)
+        participating_teams = soup.findAll('div', class_='teamcard-inner')
+        for flag in participating_teams:
+            players_list = flag.findAll('tr', {'class': None, 'id': None})
+            for player in players_list:
+                if player.find('abbr', {'title': ['Coach', 'Did not play']}) is None and player.find('img', {'alt': 'Head Coach'}) is None:  # eliminate coachs and players who haven't played
+                    player_name_and_flag = player.findAll('a')
+                    if player_name_and_flag != [] and player_name_and_flag[0].find('img'):  # eliminate Promotion and competition name
+                        if player_name_and_flag[1] is not None:
+                            player_name = player_name_and_flag[1]['href'].split('/')[2]
+                            tournament['players'].add(player_name)
 
         # Get Teams
         teams_html = soup.find_all('div', class_='block-team')
