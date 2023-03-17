@@ -1,12 +1,1 @@
-{
-  "lol" : {
-    "name" : "League of Legends",
-    "players" : [],
-    "tournaments" : []
-  },
-  "rl" : {
-    "name" : "Rocket League",
-    "players" : [],
-    "tournaments" : []
-  }
-}
+{"lol": {"name": "League of Legends", "players": [{"name": "Bai Jiahao", "country": "China", "birthdate": "12/07/2001", "approx-total-winning": 317224, "status-active": true}, {"name": "Dai Zhichun", "country": "China", "birthdate": "24/02/2000", "approx-total-winning": 106776, "status-active": true}, {"name": "An Shanye", "country": "China", "birthdate": "15/03/2001", "approx-total-winning": 16617, "status-active": true}, {"name": "Mao An", "country": "China", "birthdate": "09/04/2000", "approx-total-winning": 0, "status-active": true}, {"name": "Hu Jiale", "country": "China", "birthdate": "04/04/2001", "approx-total-winning": 34596, "status-active": true}, {"name": "Bai Jiahao", "country": "China", "birthdate": "12/07/2001", "approx-total-winning": 317224, "status-active": true}, {"name": "Dai Zhichun", "country": "China", "birthdate": "24/02/2000", "approx-total-winning": 106776, "status-active": true}, {"name": "An Shanye", "country": "China", "birthdate": "15/03/2001", "approx-total-winning": 16617, "status-active": true}, {"name": "Mao An", "country": "China", "birthdate": "09/04/2000", "approx-total-winning": 0, "status-active": true}, {"name": "Hu Jiale", "country": "China", "birthdate": "04/04/2001", "approx-total-winning": 34596, "status-active": true}], "tournaments": [{"name": "LPL Summer 2022", "start-date": "10/06/2022", "end-date": "01/09/2022", "location": "China", "team-winner": "JD Gaming", "prize-pool": 608669, "teams": 
