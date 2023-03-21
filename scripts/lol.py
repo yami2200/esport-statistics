@@ -125,14 +125,19 @@ def get_player_data(json_data):
         return None
 
     # Get player name
-    romanized_name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Romanized Name:')
-    if romanized_name_div is not None:
-        name_text = romanized_name_div.find_next_sibling('div').text
-        player['name'] = name_text
-    else:
-        name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Name:')
-        name_text = name_div.find_next_sibling('div').text
-        player['name'] = name_text
+    try:
+        romanized_name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Romanized Name:')
+        if romanized_name_div is not None:
+            name_text = romanized_name_div.find_next_sibling('div').text
+            player['name'] = name_text
+        else:
+            name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Name:')
+            name_text = name_div.find_next_sibling('div').text
+            player['name'] = name_text
+    except:
+        print("Error in player name")
+        return None
+
 
     # Get player birthdate
     try:
