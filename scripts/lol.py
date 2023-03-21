@@ -81,12 +81,15 @@ def get_tournament_data(json_data):
         for flag in participating_teams:
             players_list = flag.findAll('tr', {'class': None, 'id': None})
             for player in players_list:
-                if player.find('abbr', {'title': ['Coach', 'Did not play']}) is None and player.find('img', {'alt': 'Head Coach'}) is None:  # eliminate coachs and players who haven't played
+                # Eliminate coachs and players who haven't played
+                if player.find('abbr', {'title': ['Coach', 'Did not play']}) is None and player.find('img', {'alt': 'Head Coach'}) is None and player.find('b', class_='placement-text') is None:
                     player_name_and_flag = player.findAll('a')
-                    if player_name_and_flag != [] and player_name_and_flag[0].find('img'):  # eliminate Promotion and competition name
+                    # Eliminate Promotion and competition name
+                    if player_name_and_flag != [] and player_name_and_flag[0].find('img'):
                         if player_name_and_flag[1] is not None:
                             player_name = player_name_and_flag[1]['href'].split('/')[2]
-                            tournament['players'].append(player_name)
+                            if not player_name.startswith('index.php'):
+                                tournament['players'].append(player_name)
 
         # Get Teams
         teams_html = soup.find_all('div', class_='block-team')
@@ -170,7 +173,11 @@ def players_already_exist(playername, players_data):
 
 def run_lol(mode):
     tier_accepted = ["S-Tier"] # List of all accepted tournament tier
-    excluded_tournaments = ["All-Star/2013", "All-Star/2014", "All-Star/2015", "All-Star/2016", "All-Star/2017", "All-Star/2018", "All-Star/2020"]
+    excluded_tournaments = ["All-Star/2013", "All-Star/2014", "All-Star/2015", "All-Star/2016", "All-Star/2017", "All-Star/2018",
+                            "All-Star/2020", "Mid-Season Invitational/2020", "Rift Rivals/LCK-LPL-LMS-VCS/2019", "Rift Rivals/NA-EU/2019",
+                            "Rift Rivals/LCK-LPL-LMS/2018", "Rift Rivals/LLN-CLS-CBLOL/2018", "Rift Rivals/NA-EU/2018", "Rift Rivals/LCL-TCL-VCS/2018",
+                            "Rift Rivals/SEA-LJL-OPL/2018", "Rift Rivals/LCL-TCL/2017", "Rift Rivals/LCK-LPL-LMS/2017", "Rift Rivals/NA-EU/2017",
+                            "Rift Rivals/LLN-CLS-CBLOL/2017", "Rift Rivals/GPL-LJL-OPL/2017"]
     headers = {'User-Agent': "Open Source E-Sport Data Engineering School Project"} # User-Agent for wikiapi
     tournaments = [] # List of all tournaments name
     tournaments_data = [] # List of all tournaments data
