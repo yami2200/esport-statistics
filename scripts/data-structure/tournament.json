@@ -6,5 +6,7 @@
   "team-winner" : "",
   "prize-pool" : "",
   "teams" : [],
-  "players" : []
+  "players" : [],
+  "peak-viewers" : "",
+  "average-viewers" : ""
 }

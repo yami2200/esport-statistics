@@ -95,6 +95,21 @@ def get_tournament_data(json_data):
             teams_a = team.find('a')
             if teams_a is not None:
                 tournament['teams'].add(teams_a.get('title'))
+        tournament['teams'] = list(tournament['teams'])
+
+        # Get Viewers
+        try:
+            peakViewers = soup.find('td', string=' Peak Viewers')
+            peakViewers = peakViewers.find_next("td")
+            tournament["peak-viewers"] = int(peakViewers.text.replace(' ', ''))
+        except:
+            tournament["peak-viewers"] = 0
+        try:
+            avgViewers = soup.find('td', string=' Average Viewers')
+            avgViewers = avgViewers.find_next("td")
+            tournament["average-viewers"] = int(avgViewers.text.replace(' ', ''))
+        except:
+            tournament["average-viewers"] = 0
 
         return tournament
     except:
@@ -173,6 +188,12 @@ def players_already_exist(playername, players_data):
     return len(list(filter(lambda p: p["name"] == playername, players_data))) > 0
 
 
+def run_test():
+    with open("results/lol/test-tournaments/LCS-2022-Spring.json", "r") as input_file:
+        data = json.load(input_file)
+    tournament_data = get_tournament_data(data)
+
+
 def run_lol(mode):
     tier_accepted = ["S-Tier"] # List of all accepted tournament tier
     excluded_tournaments = ["All-Star/2013", "All-Star/2014", "All-Star/2015", "All-Star/2016", "All-Star/2017", "All-Star/2018", "All-Star/2020"]
@@ -238,44 +259,43 @@ def run_lol(mode):
 
     # Get all players
     n = 0
-    total_player = len(set(reduce(lambda a1,a2 : a1 + a2, map(lambda tournament_data : tournament_data['players'], tournaments_data))))
-    for tournament in tournaments_data:
-        for player in tournament['players']:
-            if player.startswith('index.php') or players_already_exist(player, players_data):
+    all_players = set(reduce(lambda a1,a2 : a1 + a2, map(lambda tournament_data : tournament_data['players'], tournaments_data)))
+    total_player = len(all_players)
+    for player in all_players:
+        n += 1
+        if player.startswith('index.php'):
+            continue
+        requestMade = False
+
+        # Get player page data
+        print(f"{n}/{total_player} :Getting {player} data...")
+        data = None
+
+        if mode == ParsingMode.NO_FETCHING or ParsingMode.READ_FIRST_ALL:
+            try:
+                with open("results/lol/players/"+player.replace('/', "-")+".json", "r") as input_file:
+                    data = json.load(input_file)
+            except:
+                print("Player file not found: ", player)
+
+        if data is None:
+            if mode == ParsingMode.NO_FETCHING:
+                print("No fetching, skipping player: ", player)
                 continue
-            requestMade = False
-            n += 1
+            response = requests.get(f'https://liquipedia.net/leagueoflegends/api.php?action=parse&page={player}&format=json', headers=headers)
+            requestMade = True
+            data = response.json()
+            with open("results/lol/players/"+player.replace('/', "-")+".json", "w") as output_file:
+                json.dump(data, output_file)
 
-            # Get player page data
-            print(tournament["name"])
-            print(f"{n}/{total_player} :Getting {player} data...")
-            data = None
+        # Get player data
+        pdata = get_player_data(data)
+        if pdata is not None:
+            players_data.append(pdata)
 
-            if mode == ParsingMode.NO_FETCHING or ParsingMode.READ_FIRST_ALL:
-                try:
-                    with open("results/lol/players/"+player.replace('/', "-")+".json", "r") as input_file:
-                        data = json.load(input_file)
-                except:
-                    print("Player file not found: ", player)
-
-            if data is None:
-                if mode == ParsingMode.NO_FETCHING:
-                    print("No fetching, skipping player: ", player)
-                    continue
-                response = requests.get(f'https://liquipedia.net/leagueoflegends/api.php?action=parse&page={player}&format=json', headers=headers)
-                requestMade = True
-                data = response.json()
-                with open("results/lol/players/"+player.replace('/', "-")+".json", "w") as output_file:
-                    json.dump(data, output_file)
-
-            # Get player data
-            pdata = get_player_data(data)
-            if pdata is not None:
-                players_data.append(pdata)
-
-            # Prevent from being banned
-            if requestMade:
-                time.sleep(31)
+        # Prevent from being banned
+        if requestMade:
+            time.sleep(31)
 
 
     # Read previous data
@@ -289,3 +309,6 @@ def run_lol(mode):
     # Write the updated values back to the same file
     with open('results/data.json', 'w') as f:
         json.dump(data, f)
+
+
+#run_test()

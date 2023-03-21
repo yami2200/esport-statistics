@@ -2,7 +2,7 @@ from lol import *
 from utilities import *
 
 #######   Configuration   #######
-mode = ParsingMode.READ_FIRST_ALL
+mode = ParsingMode.NO_FETCHING
 games = ["lol", "rl", "cs"]
 
 #######   Main   #######
