@@ -236,7 +236,7 @@ def run_lol(mode):
     total_player = len(set(reduce(lambda a1,a2 : a1 + a2, map(lambda tournament_data : tournament_data['players'], tournaments_data))))
     for tournament in tournaments_data:
         for player in tournament['players']:
-            if players_already_exist(player, players_data):
+            if player.startswith('index.php') or players_already_exist(player, players_data):
                 continue
             requestMade = False
             n += 1
