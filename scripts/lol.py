@@ -128,14 +128,19 @@ def get_player_data(json_data):
         return None
 
     # Get player name
-    romanized_name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Romanized Name:')
-    if romanized_name_div is not None:
-        name_text = romanized_name_div.find_next_sibling('div').text
-        player['name'] = name_text
-    else:
-        name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Name:')
-        name_text = name_div.find_next_sibling('div').text
-        player['name'] = name_text
+    try:
+        romanized_name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Romanized Name:')
+        if romanized_name_div is not None:
+            name_text = romanized_name_div.find_next_sibling('div').text
+            player['name'] = name_text
+        else:
+            name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Name:')
+            name_text = name_div.find_next_sibling('div').text
+            player['name'] = name_text
+    except:
+        print("Error in player name")
+        return None
+
 
     # Get player birthdate
     try:
@@ -243,7 +248,7 @@ def run_lol(mode):
     total_player = len(set(reduce(lambda a1,a2 : a1 + a2, map(lambda tournament_data : tournament_data['players'], tournaments_data))))
     for tournament in tournaments_data:
         for player in tournament['players']:
-            if players_already_exist(player, players_data):
+            if player.startswith('index.php') or players_already_exist(player, players_data):
                 continue
             requestMade = False
             n += 1
