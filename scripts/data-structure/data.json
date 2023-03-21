@@ -8,5 +8,10 @@
     "name" : "League of Legends",
     "players" : [],
     "tournaments" : []
+  },
+  "cs" : {
+    "name" : "Counter Strike Global Offensive",
+    "players" : [],
+    "tournaments" : []
   }
 }
