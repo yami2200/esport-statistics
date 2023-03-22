@@ -2,6 +2,7 @@ import requests
 import time
 from utilities import *
 from functools import reduce
+from datetime import datetime
 
 
 def run_test():
@@ -13,7 +14,7 @@ def run_test():
 def run_cs(mode):
     tier_accepted = ["S-Tier"] # List of all accepted tournament tier
     excluded_tournaments = []
-    headers = {'User-Agent': "Open Source E-Sport Data Engineering School Project"} # User-Agent for wikiapi
+    headers = {'User-Agent': "CSPlayersList"} # User-Agent for wikiapi
     tournaments = [] # List of all tournaments name
     tournaments_data = [] # List of all tournaments data
     players_data = [] # List of all players data
@@ -31,7 +32,7 @@ def run_cs(mode):
         print(f"## Found {len(tournaments) - presize} tournaments ! ##")
 
         # Prevent from being banned
-        time.sleep(31)
+        time.sleep(35)
 
 
     # Get all tournaments data
@@ -70,7 +71,7 @@ def run_cs(mode):
 
         # Prevent from being banned
         if requestMade:
-            time.sleep(31)
+            time.sleep(35)
 
 
     # Get all players
@@ -84,7 +85,8 @@ def run_cs(mode):
         requestMade = False
 
         # Get player page data
-        print(f"{n}/{total_player} :Getting {player} data...")
+        timenow = datetime.now().strftime("%H:%M:%S")
+        print(f"{timenow} : {n}/{total_player} :Getting {player} data...")
         data = None
 
         if mode == ParsingMode.NO_FETCHING or ParsingMode.READ_FIRST_ALL:
@@ -101,7 +103,7 @@ def run_cs(mode):
             response = requests.get(f'https://liquipedia.net/counterstrike/api.php?action=parse&page={player}&format=json', headers=headers)
             requestMade = True
             data = response.json()
-            with open("results/lol/players/"+player.replace('/', "-")+".json", "w") as output_file:
+            with open("results/cs/players/"+player.replace('/', "-")+".json", "w") as output_file:
                 json.dump(data, output_file)
 
         # Get player data
@@ -111,7 +113,7 @@ def run_cs(mode):
 
         # Prevent from being banned
         if requestMade:
-            time.sleep(31)
+            time.sleep(35)
 
 
     # Read previous data

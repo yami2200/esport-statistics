@@ -2,6 +2,8 @@ from lol import *
 from cs import *
 from utilities import *
 
+# https://liquipedia.net/api-terms-of-use
+
 #######   Configuration   #######
 mode = ParsingMode.READ_FIRST_ALL
 games = ["rl", "cs"]

@@ -184,8 +184,12 @@ def get_player_data(json_data, game):
         player['approx-total-winning'] = 0
 
     # Get player status
-    status = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Status:')
-    status_text = status.find_next_sibling('div').text
-    player['status-active'] = status_text == "Active"
+    try:
+        status = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Status:')
+        status_text = status.find_next_sibling('div').text
+        player['status-active'] = status_text == "Active"
+    except:
+        print("Error in player status")
+        return None
 
     return player
