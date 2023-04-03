@@ -1,5 +1,14 @@
 <script setup>
-const games = ["League of Legends", "Counter Strike", "Rocket League", "Dota 2"];
+import data from "@/assets/data.json"
+import { ref } from 'vue'
+import DataStats from "@/components/data-stats.vue";
+const gamesKeys = Object.keys(data);
+const games = gamesKeys.map((key) => data[key].name);
+const settings = ref(null)
+
+function getStarted(){
+  window.scrollTo({top: settings.value.offsetTop-100, behavior: 'smooth'});
+}
 </script>
 
 <template>
@@ -8,44 +17,25 @@ const games = ["League of Legends", "Counter Strike", "Rocket League", "Dota 2"]
       <div class="hero-overlay bg-opacity-60"></div>
       <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
-          <h1 class="mb-5 text-5xl font-bold">Hello there !</h1>
-          <p class="mb-5">This website provides a comprehensive collection of statistics and comparisons on various esports games. The site gathers its data from Liquipedia and presents it in an easily accessible and understandable format.</p>
-          <button class="btn btn-primary">Get Started</button>
+          <h1 class="mb-5 text-5xl font-bold text-white">Hello there !</h1>
+          <p class="mb-5 text-white text-lg">This website provides a comprehensive collection of statistics and comparisons on various esports games. The site gathers its data from Liquipedia and presents it in an easily accessible and understandable format.</p>
+          <button class="btn btn-primary" @click="getStarted">Get Started</button>
         </div>
       </div>
     </div>
-    <div class="wrappersettings">
-      <div class="alert shadow-lg mt-5 w-screen-50 bg-neutral">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <div>
-            <h3 class="font-bold">Statistics Display !</h3>
-            <div class="text-xs">Select which data you want to display :</div>
+    <div ref="settings" class="wrappersettings">
+      <div class="card w-screen-50 bg-base-300 shadow-xl mt-5 settings mb-10" style="padding-bottom: 50px;">
+          <div v-for="(game) in gamesKeys" class="wrappersettings">
+              <span class="text-3xl font-bold mt-5 mb-6 text-white"> {{data[game].name}} </span>
+              <data-stats
+                      :players="data[game].players.length"
+                      :tournaments="data[game].tournaments.length"
+                      :note="'* '+data[game]['data-note']"
+              ></data-stats>
           </div>
-        </div>
-        <div class="flex-none">
-          <div class="btn-group">
-            <button class="btn btn-active">Specific Game Statistics</button>
-            <button class="btn">Global Statistics</button>
-          </div>
-        </div>
       </div>
-      <div class="card w-screen-50 bg-neutral shadow-xl mt-5 settings mb-10">
-        <span class="mb-2 text-lg	">Game Statistics : </span>
-        <select class="select select-primary w-full max-w-xs">
-          <option v-for="game in games">{{game}}</option>
-        </select>
-        <div class="comparisonGameSettings mt-5">
-          <div class="form-control">
-            <label class="cursor-pointer label nowrap">
-              <span class="label-text mr-3">Compare with :</span>
-              <input type="checkbox" checked="checked" class="checkbox checkbox-secondary" />
-            </label>
-          </div>
-          <select class="select select-secondary w-full max-w-xs ml-5">
-            <option v-for="game in games">{{game}}</option>
-          </select>
-        </div>
+      <div class="h-screen">
+
       </div>
     </div>
 
@@ -58,10 +48,10 @@ const games = ["League of Legends", "Counter Strike", "Rocket League", "Dota 2"]
     height: 85vh;
   }
   .wrappersettings{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
   }
   .w-screen-50{
     width: 60vw;
