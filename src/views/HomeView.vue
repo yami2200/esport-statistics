@@ -13,7 +13,7 @@ function getStarted(){
 
 <template>
   <main>
-    <div class="hero" style="background-image: url(/src/assets/background.jpg)">
+    <div class="hero" style="background-image: url(/background.jpg)">
       <div class="hero-overlay bg-opacity-60"></div>
       <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
