@@ -31,6 +31,7 @@ function getStarted(){
                       :players="data[game].players.length"
                       :tournaments="data[game].tournaments.length"
                       :note="'* '+data[game]['data-note']"
+                      :time="data[game]['time-range']"
               ></data-stats>
           </div>
       </div>
