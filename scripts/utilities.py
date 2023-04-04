@@ -1,4 +1,7 @@
+import time
 from enum import Enum
+
+import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 import json
@@ -124,14 +127,50 @@ def get_tournament_data(json_data, game):
         return None
 
 
-def get_player_data(json_data, game):
+def get_player_json_from_name(player, url_name, folder_name, headers, mode, oldnames=None):
+    if oldnames is not None:
+        if player in oldnames:
+            print("Player already fetched, recursive redirect page", player)
+            return None
+        else:
+            oldnames.append(player)
+
+    data = None
+    if mode == ParsingMode.NO_FETCHING or ParsingMode.READ_FIRST_ALL:
+        if oldnames is None or player.lower() not in map(lambda n: n.lower(), oldnames):
+            try:
+                with open(f"results/{folder_name}/players/"+player.replace('/', "-")+".json", "r") as input_file:
+                    data = json.load(input_file)
+            except:
+                print("Player file not found: ", player)
+
+    if data is None:
+        if mode == ParsingMode.NO_FETCHING:
+            print("No fetching, skipping player: ", player)
+            return None
+        print("Fetching player from Liquipedia: ", player)
+        response = requests.get(f'https://liquipedia.net/{url_name}/api.php?action=parse&page={player}&format=json', headers=headers)
+        data = response.json()
+        time.sleep(35)
+        with open(f"results/{folder_name}/players/"+player.replace('/', "-")+".json", "w") as output_file:
+            json.dump(data, output_file)
+    return data
+
+
+def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
     player = load_json_file("player.json")
+    if json_data is None:
+        return None
 
     try:
         html = json_data['parse']['text']['*']
         soup = BeautifulSoup(html, 'html.parser')
-    except:
-        print("Error in player parsing")
+    except Exception as inst:
+        print("Error in player parsing :")
+        print("--->  " + str(type(inst)))
+        print("--->  " + str(inst))
+        print("--->  " + str(json_data))
+
         return None
 
     # Check if there is no multiple player with the same nickname
@@ -143,11 +182,15 @@ def get_player_data(json_data, game):
     # Check if it's not a redirect page
     redirect_text = soup.find('div', attrs={"class": "redirectMsg"})
     if redirect_text:
-        print("Error : parsing a redirect page")
-        return None
+        name = redirect_text.find_next('a').text
+        if oldnames is None:
+            oldnames = []
+        return get_player_data(get_player_json_from_name(name, url_name, game, headers, mode, oldnames), game, headers, mode, url_name, oldnames)
+
 
     # Get player name
     try:
+        player["nickname"] = json_data['parse']['title']
         romanized_name_div = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Romanized Name:')
         if romanized_name_div is not None:
             name_text = romanized_name_div.find_next_sibling('div').text
@@ -193,3 +236,13 @@ def get_player_data(json_data, game):
         return None
 
     return player
+
+
+def get_tournament_start_year(date):
+    if date is None:
+        return None
+    try:
+        year = int(date.split('/')[2])
+    except:
+        return None
+    return year
