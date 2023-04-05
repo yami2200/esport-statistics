@@ -3,23 +3,24 @@ import time
 from utilities import *
 from functools import reduce
 
-def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_name):
+def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_name, debug = False):
     headers = {'User-Agent': "Open Source E-Sport Data Engineering School Project"} # User-Agent for wikiapi
     tournaments = [] # List of all tournaments name
     tournaments_data = [] # List of all tournaments data
     players_data = [] # List of all players data
+    print("Starting script for " + url_name + "...")
 
     # Get all tournaments
     for tier in tier_accepted:
         # Get tournaments list from the tier
-        print("Getting " + tier + " tournaments list...")
+        if debug:print("Getting " + tier + " tournaments list...")
         response = requests.get(f'https://liquipedia.net/{url_name}/api.php?action=parse&page={tier}_Tournaments&format=json', headers=headers)
         data = response.json()
 
         # Get all tournaments name
         presize = len(tournaments)
         tournaments += get_tournaments_name(data)
-        print(f"## Found {len(tournaments) - presize} tournaments ! ##")
+        if debug:print(f"## Found {len(tournaments) - presize} tournaments ! ##")
 
         # Prevent from being banned
         time.sleep(35)
@@ -31,12 +32,13 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
     maxYear = 0
     for tournament in tournaments:
         n += 1
+        if not debug: printProgressBar(n, len(tournaments), prefix = "Progress Tournaments:", suffix = "Complete")
         if tournament in excluded_tournaments:
             continue
         requestMade = False
 
         # Get tournament page data
-        print(f"{n}/{len(tournaments)} : Getting {tournament} data...")
+        if debug: print(f"{n}/{len(tournaments)} : Getting {tournament} data...")
         data = None
 
         if mode == ParsingMode.NO_FETCHING or mode == ParsingMode.READ_FIRST_ALL:
@@ -48,7 +50,7 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
 
         if data is None:
             if mode == ParsingMode.NO_FETCHING:
-                print("No fetching, skipping tournament: ", tournament)
+                if debug: print("No fetching, skipping tournament: ", tournament)
                 continue
             response = requests.get(f'https://liquipedia.net/{url_name}/api.php?action=parse&page={tournament}&format=json', headers=headers)
             requestMade = True
@@ -57,7 +59,7 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
                 json.dump(data, output_file)
 
         # Get tournament data
-        tournament_data = get_tournament_data(data, folder_name)
+        tournament_data = get_tournament_data(data, folder_name, debug=debug)
         if tournament_data is not None:
             tournaments_data.append(tournament_data)
             year = get_tournament_start_year(tournament_data["start-date"])
@@ -78,6 +80,7 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
         tournament_players = []
         for player in tournament['players']:
             n += 1
+            if not debug:printProgressBar(n, total_player_with_duplicates, prefix = "Progress Players:    ", suffix = "Complete")
             if player.startswith('index.php'):
                 continue
 
@@ -86,21 +89,22 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
                 continue
 
             # Get player page data
-            print(f"{n}/{total_player_with_duplicates} :Getting {player} data...")
-            data = get_player_json_from_name(player, url_name, folder_name, headers, mode)
+            if debug: print(f"{n}/{total_player_with_duplicates} :Getting {player} data...")
+            data = get_player_json_from_name(player, url_name, folder_name, headers, mode, debug=debug)
 
             # Process player data page
-            pdata = get_player_data(data, folder_name, headers, mode, url_name, [])
+            pdata = get_player_data(data, folder_name, headers, mode, url_name, [], debug=debug)
             if pdata is not None:
                 # verify that the player name is not already in the list players_data
-                if pdata['name'] not in map(lambda player_data : player_data['name'], players_data):
+                if pdata['nickname'] not in map(lambda player_data : player_data['nickname'], players_data):
                     players_data.append(pdata)
-                    tournament_players.append(pdata['name'])
-                    player_parsed.add(pdata['name'])
+                    tournament_players.append(pdata['nickname'])
+                    player_parsed.add(pdata['nickname'])
 
         tournament['players'] = tournament_players
 
 
+    print("\n")
     # Read previous data
     with open('results/data.json', 'r') as f:
         data = json.load(f)
@@ -113,3 +117,11 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
     # Write the updated values back to the same file
     with open('results/data.json', 'w') as f:
         json.dump(data, f)
+
+
+def printProgressBar (iteration, total, prefix, suffix):
+    length = 40
+    percent = ("{0:.2f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = '█' * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = "\r")

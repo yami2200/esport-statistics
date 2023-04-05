@@ -51,7 +51,7 @@ def load_json_file(filename):
         return json.load(f)
 
 
-def get_tournament_data(json_data, game):
+def get_tournament_data(json_data, game, debug=False):
     tournament = load_json_file("tournament.json")
 
     html = json_data['parse']['text']['*']
@@ -123,17 +123,16 @@ def get_tournament_data(json_data, game):
 
         return tournament
     except:
-        print("Error in tournament: ", tournament['name'])
+        if debug:print("Error in tournament: ", tournament['name'])
         return None
 
 
-def get_player_json_from_name(player, url_name, folder_name, headers, mode, oldnames=None):
+def get_player_json_from_name(player, url_name, folder_name, headers, mode, oldnames=None, debug=False):
     if oldnames is not None:
         if player in oldnames:
-            print("Player already fetched, recursive redirect page", player)
+            if debug: print("Player already fetched, recursive redirect page", player)
             return None
-        else:
-            oldnames.append(player)
+
 
     data = None
     if mode == ParsingMode.NO_FETCHING or ParsingMode.READ_FIRST_ALL:
@@ -142,22 +141,25 @@ def get_player_json_from_name(player, url_name, folder_name, headers, mode, oldn
                 with open(f"results/{folder_name}/players/"+player.replace('/', "-")+".json", "r") as input_file:
                     data = json.load(input_file)
             except:
-                print("Player file not found: ", player)
+                if debug:print("Player file not found: ", player)
 
     if data is None:
         if mode == ParsingMode.NO_FETCHING:
-            print("No fetching, skipping player: ", player)
+            if debug:print("No fetching, skipping player: ", player)
             return None
-        print("Fetching player from Liquipedia: ", player)
+        if debug:print("Fetching player from Liquipedia: ", player)
         response = requests.get(f'https://liquipedia.net/{url_name}/api.php?action=parse&page={player}&format=json', headers=headers)
         data = response.json()
         time.sleep(35)
         with open(f"results/{folder_name}/players/"+player.replace('/', "-")+".json", "w") as output_file:
             json.dump(data, output_file)
+
+    if oldnames is not None:
+        oldnames.append(player)
     return data
 
 
-def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
+def get_player_data(json_data, game, headers, mode, url_name, oldnames=None, debug=False):
     player = load_json_file("player.json")
     if json_data is None:
         return None
@@ -166,17 +168,17 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
         html = json_data['parse']['text']['*']
         soup = BeautifulSoup(html, 'html.parser')
     except Exception as inst:
-        print("Error in player parsing :")
-        print("--->  " + str(type(inst)))
-        print("--->  " + str(inst))
-        print("--->  " + str(json_data))
+        if debug:print("Error in player parsing :")
+        if debug:print("--->  " + str(type(inst)))
+        if debug:print("--->  " + str(inst))
+        if debug:print("--->  " + str(json_data))
 
         return None
 
     # Check if there is no multiple player with the same nickname
     ambiguous_name_list = soup.find_all('a', string=lambda t: t and "disambiguation page" in t)
     if len(ambiguous_name_list) > 0:
-        print("Error : multiple player with the same name")
+        if debug:print("Error : multiple player with the same name")
         return None
 
     # Check if it's not a redirect page
@@ -185,7 +187,7 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
         name = redirect_text.find_next('a').text
         if oldnames is None:
             oldnames = []
-        return get_player_data(get_player_json_from_name(name, url_name, game, headers, mode, oldnames), game, headers, mode, url_name, oldnames)
+        return get_player_data(get_player_json_from_name(name, url_name, game, headers, mode, oldnames, debug=debug), game, headers, mode, url_name, oldnames, debug=debug)
 
 
     # Get player name
@@ -200,7 +202,7 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
             name_text = name_div.find_next_sibling('div').text
             player['name'] = name_text
     except:
-        print("Error in player name")
+        if debug:print("Error in player name")
         return None
 
 
@@ -210,7 +212,7 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
         born_text = born.find_next_sibling('div').text
         player['birthdate'] = format_date(born_text)
     except:
-        print("Error in player birthdate")
+        if debug:print("Error in player birthdate")
         return None
 
     # Get Player Country
@@ -232,7 +234,7 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None):
         status_text = status.find_next_sibling('div').text
         player['status-active'] = status_text == "Active"
     except:
-        print("Error in player status")
+        if debug:print("Error in player status")
         return None
 
     return player
