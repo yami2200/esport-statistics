@@ -110,7 +110,8 @@ def run_game_script(mode, tier_accepted, excluded_tournaments, url_name, folder_
         data = json.load(f)
 
     # Append new data
-    data[folder_name]["players"] = players_data
+    for player in players_data:
+        data[folder_name]["players"][player['nickname']] = player
     data[folder_name]["tournaments"] = tournaments_data
     data[folder_name]["time-range"] = str(minYear) + "-" + str(maxYear)
 

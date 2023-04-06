@@ -1,30 +1,38 @@
 {
   "lol" : {
     "name" : "League of Legends",
-    "players" : [],
+    "players" : {},
     "tournaments" : [],
     "time-range" : "",
-    "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information."
+    "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
+    "main-color": "#d62d2d",
+    "secondary-color": "#d66060"
   },
   "rl" : {
     "name" : "Rocket league",
-    "players" : [],
+    "players" : {},
     "tournaments" : [],
     "time-range" : "",
-    "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information."
+    "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
+    "main-color": "#1e41eb",
+    "secondary-color": "#4661e3"
   },
   "cs" : {
     "name" : "Counter Strike Global Offensive",
-    "players" : [],
+    "players" : {},
     "tournaments" : [],
     "time-range" : "",
-    "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information."
+    "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
+    "main-color": "#e39f32",
+    "secondary-color": "#d6a24f"
   },
   "dota2" : {
     "name" : "Dota 2",
-    "players" : [],
+    "players" : {},
     "tournaments" : [],
     "time-range" : "",
-    "data-note": "Information gathered from Tier 1 Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information."
+    "data-note": "Information gathered from Tier 1 Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
+    "main-color": "#88db44",
+    "secondary-color": "#9ede6a"
   }
 }
