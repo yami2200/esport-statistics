@@ -1,6 +1,7 @@
 from lol import *
 from cs import *
 from rl import *
+from dota2 import *
 from utilities import *
 import shutil
 import os
@@ -9,7 +10,7 @@ import os
 
 #######   Configuration   #######
 mode = ParsingMode.READ_FIRST_ALL
-games = ["lol", "rl", "cs"]
+games = ["dota2", "lol", "rl", "cs"]
 
 #######   Main   #######
 print("Starting collecting data")
@@ -17,6 +18,7 @@ for game in games:
     if game == "lol": run_lol(mode)
     elif game == "rl": run_rl(mode)
     elif game == "cs": run_cs(mode)
+    elif game == "dota2": run_dota(mode)
 
 # Copy data.json to src/assets
 cwd = os.getcwd()

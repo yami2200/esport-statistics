@@ -19,5 +19,12 @@
     "tournaments" : [],
     "time-range" : "",
     "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information."
+  },
+  "dota2" : {
+    "name" : "Dota 2",
+    "players" : [],
+    "tournaments" : [],
+    "time-range" : "",
+    "data-note": "Information gathered from Tier 1 Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information."
   }
 }
