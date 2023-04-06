@@ -16,12 +16,18 @@ export function PlayerNationalityStatData(gamesSelection, data, country){
         let dataGame = [];
         for(let j = timeRange.min; j <= timeRange.max; j++){
             let count = 0;
+            let parsed = new Set();
             for (let t in data[gamesSelection[i].id].tournaments) {
                 let tournament = data[gamesSelection[i].id].tournaments[t];
                 if(!tournament["start-date"].includes(j)) continue;
                 for (let p in tournament.players) {
                     let player = tournament.players[p];
-                    if(data[gamesSelection[i].id].players[player] !== undefined && data[gamesSelection[i].id].players[player].country.toLowerCase() === country.toLowerCase()) count ++;
+                    if(data[gamesSelection[i].id].players[player] !== undefined
+                        && data[gamesSelection[i].id].players[player].country.toLowerCase() === country.toLowerCase()
+                    && !parsed.has(player)){
+                        count ++;
+                        parsed.add(player);
+                    }
                 }
             }
             dataGame.push(count);
