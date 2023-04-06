@@ -37,3 +37,15 @@ export function PlayerNationalityStatData(gamesSelection, data, country){
     return datachart;
 }
 
+export function getPlayerNationalityStatOptions(){
+    return {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false
+            }
+        }};
+}

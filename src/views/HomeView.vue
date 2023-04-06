@@ -3,10 +3,12 @@ import data from "@/assets/data.json"
 import {ref, shallowReactive} from 'vue'
 import DataStats from "@/components/data-stats.vue";
 import StatCardWrapper from "@/components/stat-card-wrapper.vue";
-import LineChart from "@/components/line-chart.vue";
-import {PlayerNationalityStatData} from "@/classes/PlayerNationalityStat";
+import LineChart from "@/components/charts/line-chart.vue";
+import {getPlayerNationalityStatOptions, PlayerNationalityStatData} from "@/classes/PlayerNationalityStat";
 import TextSelect from "@/components/inputs/text-select.vue";
 import {getAllCountryPlayers} from "@/classes/Utils";
+import BarChart from "@/components/charts/bar-chart.vue";
+import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/classes/RegionalDistribution";
 
 const countryList = getAllCountryPlayers(data);
 const gamesKeys = Object.keys(data);
@@ -18,33 +20,6 @@ const gamesSelection = gamesKeys.map((key) => {return shallowReactive({name: dat
     secondary_color: data[key]["secondary-color"]
 });});
 const settings = ref(null)
-const options = {
-    responsive: true,
-    plugins: {
-        legend: {
-            position: 'top',
-        },
-        title: {
-            display: false
-        }
-    }};
-const datachart = {
-    labels: ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5"],
-    datasets: [
-        {
-            label: 'Lol',
-            data: [10, 20, {}, 51, 10],
-            borderColor: "#d75050",
-            backgroundColor: "#ce7c7c",
-        },
-        {
-            label: 'RL',
-            data: [5, 15, 35, 4, 20],
-            borderColor: "#50aed7",
-            backgroundColor: "#7cc7ce",
-        }
-    ]
-}
 
 function getStarted(){
   window.scrollTo({top: settings.value.offsetTop-100, behavior: 'smooth'});
@@ -80,12 +55,6 @@ function updateGamesSelection(data){
           </div>
       </div>
       <div class="h-screen">
-          <!--<stat-card-wrapper
-                  :games="gamesSelection"
-                  title="Nationality of players"
-                  @update-games-selection="updateGamesSelection"
-          >
-          </stat-card-wrapper>-->
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Evolution of specific player nationality in tournaments"
@@ -98,7 +67,17 @@ function updateGamesSelection(data){
                   </div>
               </template>
               <template #graph="{ userInput }">
-                  <line-chart v-if="userInput.country" :chart-data="PlayerNationalityStatData(gamesSelection, data, userInput.country)" :chart-options="options"></line-chart>
+                  <line-chart v-if="userInput.country" :chart-data="PlayerNationalityStatData(gamesSelection, data, userInput.country)" :chart-options="getPlayerNationalityStatOptions()"></line-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Regional distribution of Esports players"
+                  subtitle="Number of current and past players by country in tournaments history"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getRegionalDistributionData(gamesSelection, data)" :chart-options="getRegionalDistributionOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
       </div>
