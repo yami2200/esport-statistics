@@ -55,7 +55,7 @@ function openModal(type, game){
             }
         });
     }
-    this.modal.openModal(dataToDisplay, title, url)
+    modal.value.openModal(dataToDisplay, title, url)
 }
 </script>
 
