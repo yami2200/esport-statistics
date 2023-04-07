@@ -9,8 +9,10 @@ import TextSelect from "@/components/inputs/text-select.vue";
 import {getAllCountryPlayers} from "@/classes/Utils";
 import BarChart from "@/components/charts/bar-chart.vue";
 import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/classes/RegionalDistribution";
+import ModalDataInfo from "@/components/modal-data-info.vue";
 
 const countryList = getAllCountryPlayers(data);
+const modal = ref(null)
 const gamesKeys = Object.keys(data);
 const games = gamesKeys.map((key) => data[key].name);
 const gamesSelection = gamesKeys.map((key) => {return shallowReactive({name: data[key].name,
@@ -28,6 +30,33 @@ function getStarted(){
 function updateGamesSelection(data){
     gamesSelection[data.index].selected = data.value;
 }
+
+function openModal(type, game){
+    console.log(type, game);
+    const title = data[game].name + " data " + type + " :";
+    let dataToDisplay = [];
+    let url = data[game].url;
+    if(type === "players"){
+        dataToDisplay = Object.keys(data[game].players).map((player) => {
+            return {
+                name: data[game].players[player].nickname,
+                status: (data[game].players[player]["status-active"] ? "Active" : "Not active"),
+                country: data[game].players[player]["country"]
+            }
+        })
+
+    } else if(type === "tournaments"){
+        url += "index.php?search="
+        dataToDisplay = data[game].tournaments.map((tournament) => {
+            return {
+                name: tournament.name,
+                "start-date": tournament["start-date"],
+                location: tournament.location
+            }
+        });
+    }
+    this.modal.openModal(dataToDisplay, title, url)
+}
 </script>
 
 <template>
@@ -36,17 +65,19 @@ function updateGamesSelection(data){
       <div class="hero-overlay bg-opacity-60"></div>
       <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
-          <h1 class="mb-5 text-5xl font-bold text-white">Hello there !</h1>
+          <h1 class="mb-5 text-5xl font-bold text-white">E-sport Statistics !</h1>
           <p class="mb-5 text-white text-lg">This website provides a comprehensive collection of statistics and comparisons on various esports games. The site gathers its data from Liquipedia and presents it in an easily accessible and understandable format.</p>
           <button class="btn btn-primary" @click="getStarted">Get Started</button>
         </div>
       </div>
     </div>
+    <modal-data-info ref="modal"></modal-data-info>
     <div ref="settings" class="wrappersettings">
       <div class="card w-screen-50 bg-base-300 shadow-xl mt-5 settings mb-5" style="padding-bottom: 50px;">
           <div v-for="(game) in gamesKeys" class="wrappersettings">
               <span class="text-3xl font-bold mt-5 mb-6 text-white"> {{data[game].name}} </span>
               <data-stats
+                      @openModal="openModal($event, game)"
                       :players="Object.keys(data[game].players).length"
                       :tournaments="data[game].tournaments.length"
                       :note="'* '+data[game]['data-note']"

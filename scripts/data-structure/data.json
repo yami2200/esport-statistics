@@ -6,7 +6,8 @@
     "time-range" : "",
     "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
     "main-color": "#d62d2d",
-    "secondary-color": "#d66060"
+    "secondary-color": "#d66060",
+    "url": "https://liquipedia.net/leagueoflegends/"
   },
   "rl" : {
     "name" : "Rocket league",
@@ -15,7 +16,8 @@
     "time-range" : "",
     "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
     "main-color": "#1e41eb",
-    "secondary-color": "#4661e3"
+    "secondary-color": "#4661e3",
+    "url": "https://liquipedia.net/rocketleague/"
   },
   "cs" : {
     "name" : "Counter Strike Global Offensive",
@@ -24,7 +26,8 @@
     "time-range" : "",
     "data-note": "Information gathered from S-Tier Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
     "main-color": "#e39f32",
-    "secondary-color": "#d6a24f"
+    "secondary-color": "#d6a24f",
+    "url": "https://liquipedia.net/counterstrike/"
   },
   "dota2" : {
     "name" : "Dota 2",
@@ -33,6 +36,7 @@
     "time-range" : "",
     "data-note": "Information gathered from Tier 1 Tournaments information from Liquipedia. Some players and tournaments may not be included due to lack of information.",
     "main-color": "#88db44",
-    "secondary-color": "#9ede6a"
+    "secondary-color": "#9ede6a",
+    "url": "https://liquipedia.net/dota2/"
   }
 }

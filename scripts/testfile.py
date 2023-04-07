@@ -11,7 +11,7 @@ def test():
 def test2():
     headers = {'User-Agent': "Open Source E-Sport Data Engineering School Project"}
     mode = ParsingMode.READ_FIRST_ALL
-    print(get_player_data(get_player_json_from_name("DanDy", "leagueoflegends", "lol", headers, mode), "lol", headers, mode, "leagueoflegends", []))
+    print(get_player_data(get_player_json_from_name("Nine", "dota2", "dota2", headers, mode), "dota2", headers, mode, "dota2", []))
 
 
 def test3():

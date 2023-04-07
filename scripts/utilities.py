@@ -234,8 +234,13 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None, deb
         status_text = status.find_next_sibling('div').text
         player['status-active'] = status_text == "Active"
     except:
-        if debug:print("Error in player status")
-        return None
+        try:
+            status = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Years Active (Player):')
+            status_text = status.find_next_sibling('div').text
+            player['status-active'] = "Present" in status_text
+        except:
+            if debug:print("Error in player status")
+            return None
 
     return player
 

@@ -10,7 +10,7 @@ import os
 
 #######   Configuration   #######
 mode = ParsingMode.READ_FIRST_ALL
-games = ["dota2", "lol", "rl", "cs"]
+games = ["lol", "rl", "cs", "dota2"]
 
 #######   Main   #######
 print("Starting collecting data")
