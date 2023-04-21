@@ -8,8 +8,10 @@ import {getPlayerNationalityStatOptions, PlayerNationalityStatData} from "@/clas
 import TextSelect from "@/components/inputs/text-select.vue";
 import {getAllCountryPlayers} from "@/classes/Utils";
 import BarChart from "@/components/charts/bar-chart.vue";
+import PieChart from "@/components/charts/pie-chart.vue";
 import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/classes/RegionalDistribution";
 import ModalDataInfo from "@/components/modal-data-info.vue";
+import {getAgeRepartitionStatData, getPlayerAgeStatOptions} from "@/classes/AgeRepartition";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -109,6 +111,16 @@ function openModal(type, game){
           >
               <template #graph>
                   <bar-chart :chart-data="getRegionalDistributionData(gamesSelection, data)" :chart-options="getRegionalDistributionOptions()"></bar-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Age distribution of Esports players"
+                  subtitle="Age of current players in the esport scene"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <pie-chart :chart-data="getAgeRepartitionStatData(gamesSelection, data)" :chart-options="getPlayerAgeStatOptions()"></pie-chart>
               </template>
           </stat-card-wrapper>
       </div>

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "chart.js": "^4.2.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "daisyui": "^2.51.4",
     "vue": "^3.2.47",
     "vue-chartjs": "^5.2.0",

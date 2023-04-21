@@ -32,3 +32,11 @@ export function getAllCountryPlayers(data){
     result.sort()
     return result;
 }
+
+export function getPlayerAge(dateString) {
+    let date = dateString.split("/");
+    var birthday = new Date(date[1]+"/"+date[0]+"/"+date[2]);
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
