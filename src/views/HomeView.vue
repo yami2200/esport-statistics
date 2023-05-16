@@ -25,6 +25,8 @@ import {
     getAverageAverageViewerTournamentOptions
 } from "@/classes/AverageAverageViewer";
 import InfoNote from "@/components/notes/info-note.vue";
+import {getMostWinningTeamData, getMostWinningTeamOptions} from "@/classes/MostWinningTeam";
+import {getMostSuccessfulTeamData, getMostSuccessfulTeamOptions} from "@/classes/MostSuccessfulTeam";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -136,6 +138,27 @@ function openModal(type, game){
           >
               <template #graph>
                   <pie-chart :chart-data="getAgeRepartitionStatData(gamesSelection, data)" :chart-options="getPlayerAgeStatOptions()"></pie-chart>
+              </template>
+          </stat-card-wrapper>
+          <span class="text-5xl font-bold mt-6 mb-7 text-white "> 👨‍👨‍👦‍👦 Team Section : </span>
+          <stat-card-wrapper
+              :games="gamesSelection"
+              title="Teams with the most tournaments win"
+              subtitle="Top 30 of teams based on the number of tournaments they won"
+              @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getMostWinningTeamData(gamesSelection, data)" :chart-options="getMostWinningTeamOptions()"></bar-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+              :games="gamesSelection"
+              title="Teams with the higher rate of winning"
+              subtitle="Top 30 of teams based on the number of tournaments they won divided by the number of tournaments they played"
+              @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getMostSuccessfulTeamData(gamesSelection, data)" :chart-options="getMostSuccessfulTeamOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
           <span class="text-5xl font-bold mt-6 mb-7 text-white "> 💸 CashPrize Section : </span>

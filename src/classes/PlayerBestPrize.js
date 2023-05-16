@@ -7,6 +7,9 @@ export function getPlayerBestPrizeOptions(){
             title: {
                 display: false
             },
+            datalabels: {
+                display: false
+            }
         },
         responsive: true,
         scales: {
