@@ -13,7 +13,7 @@ import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/cla
 import ModalDataInfo from "@/components/modal-data-info.vue";
 import {getAgeRepartitionStatData, getPlayerAgeStatOptions} from "@/classes/AgeRepartition";
 import {CashPrizeEvolution} from "@/classes/CashPrizeEvolution";
-import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "../classes/PlayerBestPrize";
+import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "@/classes/PlayerBestPrize";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)

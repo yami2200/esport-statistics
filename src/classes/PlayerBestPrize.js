@@ -31,21 +31,21 @@ export function getPlayerBestPrizeData(gamesSelection, data){
             playersBestPrize.push(player);
         }
     }
-    playersBestPrize.sort((a, b) => a["approx-total-winning"] - b["approx-total-winning"]);
+    playersBestPrize.sort((a, b) => b["approx-total-winning"] - a["approx-total-winning"]);
     const datachart = {
         labels: [],
-        datasets: {
+        datasets: [{
             label: "Approximate total winnings",
             data: [],
             borderColor: [],
             backgroundColor: [],
-        }
+        }]
     }
-    for(let i = 0; i < 25 ; i++) {
-        datachart.labels.push(playersBestPrize[i]["name"]);
-        datachart.datasets.data.push(playersBestPrize[i]["approx-total-winning"]);
-        datachart.datasets.backgroundColor.push(gamesSelection[playersBestPrize[i]["game_index"]]["main_color"]);
-        datachart.datasets.backgroundColor.push(gamesSelection[playersBestPrize[i]["game_index"]]["secondary_color"]);
+    for(let i = 0; i < 30 ; i++) {
+        datachart.labels.push(playersBestPrize[i]["nickname"]);
+        datachart.datasets[0].data.push(playersBestPrize[i]["approx-total-winning"]);
+        datachart.datasets[0].borderColor.push(gamesSelection[playersBestPrize[i]["game_index"]]["main_color"]);
+        datachart.datasets[0].backgroundColor.push(gamesSelection[playersBestPrize[i]["game_index"]]["secondary_color"]);
     }
 
     return datachart;
