@@ -12,6 +12,7 @@ import PieChart from "@/components/charts/pie-chart.vue";
 import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/classes/RegionalDistribution";
 import ModalDataInfo from "@/components/modal-data-info.vue";
 import {getAgeRepartitionStatData, getPlayerAgeStatOptions} from "@/classes/AgeRepartition";
+import {CashPrizeEvolution} from "@/classes/CashPrizeEvolution";
 import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "../classes/PlayerBestPrize";
 
 const countryList = getAllCountryPlayers(data);
@@ -122,6 +123,16 @@ function openModal(type, game){
           >
               <template #graph>
                   <pie-chart :chart-data="getAgeRepartitionStatData(gamesSelection, data)" :chart-options="getPlayerAgeStatOptions()"></pie-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Evolution of cash-prize in tournaments"
+                  subtitle="Tracking the Sum of all cashprize in Major Tournaments."
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <line-chart :chart-data="CashPrizeEvolution(gamesSelection, data)" :chart-options="getPlayerNationalityStatOptions()"></line-chart>
               </template>
           </stat-card-wrapper>
           <stat-card-wrapper
