@@ -17,7 +17,6 @@ import {
     getRegionalDistributionWinningData,
     getRegionalDistributionWinningOptions
 } from "@/classes/ApproxWinningPerCountry";
-import {CashPrizeEvolution} from "@/classes/CashPrizeEvolution";
 import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "@/classes/PlayerBestPrize";
 
 const countryList = getAllCountryPlayers(data);
@@ -94,7 +93,7 @@ function openModal(type, game){
               ></data-stats>
           </div>
       </div>
-      <div class="h-screen">
+      <div class="h-screen wrappersettings">
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Evolution of specific player nationality in tournaments"
@@ -130,10 +129,11 @@ function openModal(type, game){
                   <pie-chart :chart-data="getAgeRepartitionStatData(gamesSelection, data)" :chart-options="getPlayerAgeStatOptions()"></pie-chart>
               </template>
           </stat-card-wrapper>
+          <span class="text-5xl font-bold mt-6 mb-7 text-white "> 💸 CashPrize Section : </span>
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Evolution of cash-prize in tournaments"
-                  subtitle="Tracking the Sum of all cashprize in Major Tournaments."
+                  subtitle="Tracking the Sum of all cashprize in Major Tournaments. (dollars)"
                   @update-games-selection="updateGamesSelection"
           >
               <template #graph>
@@ -143,7 +143,7 @@ function openModal(type, game){
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Approx total Winnings of Esports players by Nationality"
-                  subtitle="Sum of all cashprize won by players per country in Major Tournaments."
+                  subtitle="Sum of all cashprize won by players per country in Major Tournaments. (dollars)"
                   @update-games-selection="updateGamesSelection"
           >
               <template #graph>
@@ -153,7 +153,7 @@ function openModal(type, game){
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Players with the higher approximate total winnings"
-                  subtitle="Ranking of all players based on the total amount of money they won"
+                  subtitle="Ranking of all players based on the total amount of money they won. (dollars)"
                   @update-games-selection="updateGamesSelection"
           >
               <template #graph>
