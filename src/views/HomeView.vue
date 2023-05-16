@@ -17,6 +17,8 @@ import {
     getRegionalDistributionWinningData,
     getRegionalDistributionWinningOptions
 } from "@/classes/ApproxWinningPerCountry";
+import {CashPrizeEvolution} from "@/classes/CashPrizeEvolution";
+import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "@/classes/PlayerBestPrize";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -146,6 +148,16 @@ function openModal(type, game){
           >
               <template #graph>
                   <bar-chart :chart-data="getRegionalDistributionWinningData(gamesSelection, data)" :chart-options="getRegionalDistributionWinningOptions()"></bar-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Players with the higher approximate total winnings"
+                  subtitle="Ranking of all players based on the total amount of money they won"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getPlayerBestPrizeData(gamesSelection, data)" :chart-options="getPlayerBestPrizeOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
       </div>
