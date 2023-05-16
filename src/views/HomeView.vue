@@ -18,6 +18,13 @@ import {
     getRegionalDistributionWinningOptions
 } from "@/classes/ApproxWinningPerCountry";
 import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "@/classes/PlayerBestPrize";
+import {getMostAverageViewerTournament, getMostAverageViewerTournamentOptions} from "@/classes/MostAverageViewer";
+import {getMostPeakViewerTournament, getMostPeakViewerTournamentOptions} from "@/classes/MostPeakViewer";
+import {
+    getAverageAverageViewerTournament,
+    getAverageAverageViewerTournamentOptions
+} from "@/classes/AverageAverageViewer";
+import InfoNote from "@/components/notes/info-note.vue";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -93,7 +100,8 @@ function openModal(type, game){
               ></data-stats>
           </div>
       </div>
-      <div class="h-screen wrappersettings">
+      <div class="wrappersettings">
+          <span class="text-5xl font-bold mt-6 mb-7 text-white "> 🌏 Nationality Section : </span>
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Evolution of specific player nationality in tournaments"
@@ -119,6 +127,7 @@ function openModal(type, game){
                   <bar-chart :chart-data="getRegionalDistributionData(gamesSelection, data)" :chart-options="getRegionalDistributionOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
+          <span class="text-5xl font-bold mt-6 mb-7 text-white "> 🎂 Age Section : </span>
           <stat-card-wrapper
                   :games="gamesSelection"
                   title="Age distribution of Esports players"
@@ -158,6 +167,46 @@ function openModal(type, game){
           >
               <template #graph>
                   <bar-chart :chart-data="getPlayerBestPrizeData(gamesSelection, data)" :chart-options="getPlayerBestPrizeOptions()"></bar-chart>
+              </template>
+          </stat-card-wrapper>
+          <span class="text-5xl font-bold mt-6 mb-7 text-white "> 🎞 Viewers Section : </span>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Top average viewers per year in tournaments"
+                  subtitle="Display the top average viewers per year in all tournaments for each year"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <line-chart :chart-data="getMostAverageViewerTournament(gamesSelection, data)" :chart-options="getMostAverageViewerTournamentOptions()"></line-chart>
+              </template>
+              <template #note>
+                  <info-note text="The data is not available for Counter Strike Global Offensive."></info-note>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Top peak viewers per year in tournaments"
+                  subtitle="Display the top peak viewers per year from all tournaments for each year"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <line-chart :chart-data="getMostPeakViewerTournament(gamesSelection, data)" :chart-options="getMostPeakViewerTournamentOptions()"></line-chart>
+              </template>
+              <template #note>
+                  <info-note text="The data is not available for Counter Strike Global Offensive."></info-note>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Mean of Average viewers per year in all tournaments"
+                  subtitle="Display the mean of average viewers per year of all tournaments for each year"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <line-chart :chart-data="getAverageAverageViewerTournament(gamesSelection, data)" :chart-options="getAverageAverageViewerTournamentOptions()"></line-chart>
+              </template>
+              <template #note>
+                  <info-note text="The data is not available for Counter Strike Global Offensive."></info-note>
               </template>
           </stat-card-wrapper>
       </div>

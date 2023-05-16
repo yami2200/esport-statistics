@@ -6,6 +6,9 @@
             <div class="stat">
                 <slot name="input" :setUserInput="setUserInput"></slot>
                 <slot name="graph" :userInput="userInput"></slot>
+                <div class="mt-4">
+                    <slot name="note"></slot>
+                </div>
             </div>
             <div class="gameselector">
                 <label v-for="(game, i) in games" class="label cursor-pointer">
