@@ -12,6 +12,7 @@ import PieChart from "@/components/charts/pie-chart.vue";
 import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/classes/RegionalDistribution";
 import ModalDataInfo from "@/components/modal-data-info.vue";
 import {getAgeRepartitionStatData, getPlayerAgeStatOptions} from "@/classes/AgeRepartition";
+import {getPlayerBestPrizeData, getPlayerBestPrizeOptions} from "../classes/PlayerBestPrize";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -121,6 +122,16 @@ function openModal(type, game){
           >
               <template #graph>
                   <pie-chart :chart-data="getAgeRepartitionStatData(gamesSelection, data)" :chart-options="getPlayerAgeStatOptions()"></pie-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Players with the higher approximate total winnings"
+                  subtitle="Ranking of all players based on the total amount of money they won"
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getPlayerBestPrizeData(gamesSelection, data)" :chart-options="getPlayerBestPrizeOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
       </div>
