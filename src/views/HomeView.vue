@@ -27,6 +27,7 @@ import {
 import InfoNote from "@/components/notes/info-note.vue";
 import {getMostWinningTeamData, getMostWinningTeamOptions} from "@/classes/MostWinningTeam";
 import {getMostSuccessfulTeamData, getMostSuccessfulTeamOptions} from "@/classes/MostSuccessfulTeam";
+import {getRateOfRetiredPlayersData, getRateOfRetiredPlayersOptions} from "@/classes/RateOfRetiredPlayers";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -140,6 +141,27 @@ function openModal(type, game){
                   <pie-chart :chart-data="getAgeRepartitionStatData(gamesSelection, data)" :chart-options="getPlayerAgeStatOptions()"></pie-chart>
               </template>
           </stat-card-wrapper>
+          <span class="text-5xl font-bold mt-6 mb-7 text-white "> 🏃‍♂️ Players Section : </span>
+          <stat-card-wrapper
+              :games="gamesSelection"
+              title="Players with the higher approximate total winnings"
+              subtitle="Ranking of all players based on the total amount of money they won. (dollars)"
+              @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getPlayerBestPrizeData(gamesSelection, data)" :chart-options="getPlayerBestPrizeOptions()"></bar-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+              :games="gamesSelection"
+              title="Rate of active players by game"
+              subtitle="Number of players active divided by the number of players per games"
+              @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getRateOfRetiredPlayersData(gamesSelection, data)" :chart-options="getRateOfRetiredPlayersOptions()"></bar-chart>
+              </template>
+          </stat-card-wrapper>
           <span class="text-5xl font-bold mt-6 mb-7 text-white "> 👨‍👨‍👦‍👦 Team Section : </span>
           <stat-card-wrapper
               :games="gamesSelection"
@@ -180,16 +202,6 @@ function openModal(type, game){
           >
               <template #graph>
                   <bar-chart :chart-data="getRegionalDistributionWinningData(gamesSelection, data)" :chart-options="getRegionalDistributionWinningOptions()"></bar-chart>
-              </template>
-          </stat-card-wrapper>
-          <stat-card-wrapper
-                  :games="gamesSelection"
-                  title="Players with the higher approximate total winnings"
-                  subtitle="Ranking of all players based on the total amount of money they won. (dollars)"
-                  @update-games-selection="updateGamesSelection"
-          >
-              <template #graph>
-                  <bar-chart :chart-data="getPlayerBestPrizeData(gamesSelection, data)" :chart-options="getPlayerBestPrizeOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
           <span class="text-5xl font-bold mt-6 mb-7 text-white "> 🎞 Viewers Section : </span>
