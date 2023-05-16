@@ -12,7 +12,11 @@ import PieChart from "@/components/charts/pie-chart.vue";
 import {getRegionalDistributionData, getRegionalDistributionOptions} from "@/classes/RegionalDistribution";
 import ModalDataInfo from "@/components/modal-data-info.vue";
 import {getAgeRepartitionStatData, getPlayerAgeStatOptions} from "@/classes/AgeRepartition";
-import {CashPrizeEvolution} from "@/classes/CashPrizeEvolution";
+import {CashPrizeEvolution, getCashPrizeEvolutionOptions} from "@/classes/CashPrizeEvolution";
+import {
+    getRegionalDistributionWinningData,
+    getRegionalDistributionWinningOptions
+} from "@/classes/ApproxWinningPerCountry";
 
 const countryList = getAllCountryPlayers(data);
 const modal = ref(null)
@@ -131,7 +135,17 @@ function openModal(type, game){
                   @update-games-selection="updateGamesSelection"
           >
               <template #graph>
-                  <line-chart :chart-data="CashPrizeEvolution(gamesSelection, data)" :chart-options="getPlayerNationalityStatOptions()"></line-chart>
+                  <line-chart :chart-data="CashPrizeEvolution(gamesSelection, data)" :chart-options="getCashPrizeEvolutionOptions()"></line-chart>
+              </template>
+          </stat-card-wrapper>
+          <stat-card-wrapper
+                  :games="gamesSelection"
+                  title="Approx total Winnings of Esports players by Nationality"
+                  subtitle="Sum of all cashprize won by players per country in Major Tournaments."
+                  @update-games-selection="updateGamesSelection"
+          >
+              <template #graph>
+                  <bar-chart :chart-data="getRegionalDistributionWinningData(gamesSelection, data)" :chart-options="getRegionalDistributionWinningOptions()"></bar-chart>
               </template>
           </stat-card-wrapper>
       </div>

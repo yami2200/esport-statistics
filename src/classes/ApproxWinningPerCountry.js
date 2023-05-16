@@ -1,8 +1,8 @@
-import data from "@/assets/data.json";
 import {getAllCountryPlayers} from "@/classes/Utils";
 
-export function getRegionalDistributionOptions(){
+export function getRegionalDistributionWinningOptions(){
     return {
+        //indexAxis: 'y',
         plugins: {
             title: {
                 display: false
@@ -23,7 +23,7 @@ export function getRegionalDistributionOptions(){
     };
 }
 
-export function getRegionalDistributionData(gamesSelection, data){
+export function getRegionalDistributionWinningData(gamesSelection, data){
     const countries = getAllCountryPlayers(data);
     const datachart = {
         labels: countries,
@@ -40,7 +40,7 @@ export function getRegionalDistributionData(gamesSelection, data){
         let dataGame = Array(countries.length).fill(0);
         for(let p in data[gamesSelection[i].id].players){
             let player = data[gamesSelection[i].id].players[p];
-            dataGame[countryIndexes[player.country]]++;
+            dataGame[countryIndexes[player.country]] += player["approx-total-winning"];
         }
         datachart.datasets.push({
             label: gamesSelection[i].name,

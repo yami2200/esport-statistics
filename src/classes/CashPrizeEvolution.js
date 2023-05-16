@@ -1,5 +1,22 @@
 import {getTimeRangeFromAllGames} from "@/classes/Utils";
 
+
+export function getCashPrizeEvolutionOptions(){
+    return {
+        responsive: true,
+        plugins: {
+            datalabels: {
+                display: false
+            },
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false
+            }
+        }};
+}
+
 export function CashPrizeEvolution(gamesSelection, data){
     const datachart = {
         labels: [],
