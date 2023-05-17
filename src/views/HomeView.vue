@@ -154,8 +154,8 @@ function openModal(type, game){
           </stat-card-wrapper>
           <stat-card-wrapper
               :games="gamesSelection"
-              title="Rate of active players by game"
-              subtitle="Number of players active divided by the number of players per games"
+              title="Percentage of active players per game"
+              subtitle="Percentage of active players over the total number of players per game (retired + actives)"
               @update-games-selection="updateGamesSelection"
           >
               <template #graph>

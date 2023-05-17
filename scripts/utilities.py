@@ -212,8 +212,7 @@ def get_player_data(json_data, game, headers, mode, url_name, oldnames=None, deb
         born_text = born.find_next_sibling('div').text
         player['birthdate'] = format_date(born_text)
     except:
-        if debug:print("Error in player birthdate")
-        return None
+        player['birthdate'] = "unknown"
 
     # Get Player Country
     country = soup.find('div', attrs={'class': 'infobox-cell-2 infobox-description'}, string='Nationality:')

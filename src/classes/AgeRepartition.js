@@ -16,7 +16,7 @@ export function getAgeRepartitionStatData(gamesSelection, data){
 
         for (let p of Object.keys(data[gamesSelection[i].id].players)) {
             let player = data[gamesSelection[i].id].players[p];
-            if(!player || !player["status-active"]) continue;
+            if(!player || !player["status-active"] || !player["birthdate"] || player["birthdate"] === "unknown") continue;
             let age = getPlayerAge(player["birthdate"]);
             dataGame[age]++;
         }

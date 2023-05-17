@@ -9,7 +9,7 @@ import os
 # https://liquipedia.net/api-terms-of-use
 
 #######   Configuration   #######
-mode = ParsingMode.READ_FIRST_ALL
+mode = ParsingMode.NO_FETCHING
 games = ["lol", "rl", "cs", "dota2"]
 
 #######   Main   #######
